@@ -1,45 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('contactForm');
     const statusMessage = document.getElementById('statusMessage');
-    const inputs = form.querySelectorAll('input, textarea');
-
-    // Inline validation
-    inputs.forEach(input => {
-        input.addEventListener('blur', function() {
-            validateField(this);
-        });
-    });
-
-    function validateField(field) {
-        const errorElement = field.nextElementSibling.nextElementSibling;
-        if (field.checkValidity()) {
-            errorElement.textContent = '';
-        } else {
-            if (field.validity.valueMissing) {
-                errorElement.textContent = 'This field is required.';
-            } else if (field.validity.typeMismatch) {
-                errorElement.textContent = 'Please enter a valid ' + field.type + '.';
-            }
-        }
-    }
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        // Validate all fields before submission
-        let isValid = true;
-        inputs.forEach(input => {
-            validateField(input);
-            if (!input.checkValidity()) {
-                isValid = false;
-            }
-        });
-
-        if (!isValid) {
-            statusMessage.textContent = 'Please correct the errors in the form.';
-            statusMessage.style.color = '#F44336';
-            return;
-        }
 
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
@@ -55,13 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
             body: JSON.stringify(data),
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            if (response.ok) {
+                return Promise.resolve('Success');
+            } else {
+                return Promise.reject('Error');
             }
-            return response.status;
         })
-        .then(status => {
-            console.log('Success:', status);
+        .then(() => {
+            console.log('Success: Message sent');
             statusMessage.textContent = 'Thank you! Your message has been sent successfully.';
             statusMessage.style.color = '#4CAF50';
             form.reset();
