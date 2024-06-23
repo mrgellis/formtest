@@ -31,10 +31,5 @@ document.addEventListener('DOMContentLoaded', function() {
             statusMessage.style.color = '#4CAF50';
             form.reset();
         })
-        .catch((error) => {
-            console.error('Error:', error);
-            statusMessage.textContent = 'An error occurred. Please try again or contact support if the problem persists.';
-            statusMessage.style.color = '#F44336';
-        });
     });
 });
