@@ -20,12 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
+            // For webhooks that don't return JSON, we can just check if the status is OK
+            return response.status;
         })
-        .then(data => {
-            console.log('Success:', data);
+        .then(status => {
+            console.log('Success:', status);
             statusMessage.textContent = 'Message sent successfully!';
             statusMessage.style.color = '#4CAF50';
             form.reset();
